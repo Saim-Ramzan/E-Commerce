@@ -5,18 +5,21 @@ import { RootState, AppDispatch, } from "@/lib/store";
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchProducts } from "@/app/store/Slice";
 import ProductListLoding from "@/component/common/ProductListLoding";
+import toast from "react-hot-toast";
 
 function page() {
-    const data = [1,2,3,4,5,6,7,8]
     const dispatch = useDispatch<AppDispatch>();
-    const { products, loading, error } = useSelector((state: RootState) => state.products);
+    const { products, loading, error,productsLength } = useSelector((state: RootState) => state.products);
 
     useEffect(() => {
       dispatch(fetchProducts());
     }, [dispatch])
     
-    console.log("products",products)
+    console.log("productsLength",productsLength)
     
+    if(error)(
+        toast.error(error)
+    )
   return (
     <div className="flex flex-1 flex-col gap-6 p-6 bg-[#dedeff38]">
       <div className="grid gap-6 md:grid-cols-3  p-6 rounded-xl">
@@ -25,13 +28,12 @@ function page() {
             <LucideShoppingBag />
             <h2 className="text-lg font-semibold">Total Products</h2>
           </div>
-          {products.length === 0 ? (
+          {loading ?
             <div className="mt-2">
             <Loader/>
             </div>
-          ) 
-          :
-          <h3 className="text-3xl font-bold">{products.length}</h3>
+            :
+          <h3 className="text-3xl font-bold">{productsLength}</h3>
           }
         </div>
         <div className="flex flex-col justify-center items-center aspect-video rounded-xl bg-white shadow-lg  p-4 ">
